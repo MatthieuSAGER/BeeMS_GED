@@ -18,6 +18,22 @@ DATABASE_PATH = os.environ.get("DATABASE_PATH", DEFAULT_DB_PATH)
 backslashes = chr(92)
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH.replace(backslashes, '/')}"
 
+# Créer le dossier de la base de données s'il n'existe pas
+# Gérer à la fois les chemins relatifs et absolus
+if not os.path.exists(os.path.dirname(DATABASE_PATH)):
+    # Si le chemin contient des backslashes, créer le dossier parent
+    if backslashes in DATABASE_PATH:
+        # Extraire le chemin du dossier
+        db_dir = os.path.dirname(DATABASE_PATH)
+        if db_dir and not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+            print(f"Created database directory: {db_dir}")
+    else:
+        # Chemin relatif - créer le dossier database dans le répertoire courant
+        if not os.path.exists("database"):
+            os.makedirs("database", exist_ok=True)
+            print("Created database directory: database")
+
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False},
