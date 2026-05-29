@@ -12,6 +12,9 @@ from app.database import engine, Base
 from app.models.document import Document
 from sqlalchemy.orm import sessionmaker
 
+# Utiliser chr(92) pour représenter les backslashes
+bs = chr(92)
+
 # Sample data
 SAMPLE_DOCUMENTS = [
     {
@@ -23,7 +26,7 @@ SAMPLE_DOCUMENTS = [
         "format": "PDF",
         "client": "Client Alpha",
         "projet": "Projet Alpha",
-        "chemin": "\\\\NAS\\Projets\\ClientAlpha\\Contrat.pdf",
+        "chemin": f"{bs}{bs}NAS{bs}Projets{bs}ClientAlpha{bs}Contrat.pdf",
     },
     {
         "reference": "DOC-2024-002",
@@ -34,7 +37,7 @@ SAMPLE_DOCUMENTS = [
         "format": "Word",
         "client": "Client Beta",
         "projet": "Projet Beta",
-        "chemin": "\\\\NAS\\Projets\\ClientBeta\\Devis.docx",
+        "chemin": f"{bs}{bs}NAS{bs}Projets{bs}ClientBeta{bs}Devis.docx",
     },
     {
         "reference": "TECH-2024-001",
@@ -45,7 +48,7 @@ SAMPLE_DOCUMENTS = [
         "format": "PDF",
         "client": "Client Gamma",
         "projet": "Projet Gamma",
-        "chemin": "\\\\NAS\\Technique\\ModuleX.pdf",
+        "chemin": f"{bs}{bs}NAS{bs}Technique{bs}ModuleX.pdf",
     },
     {
         "reference": "DOC-2024-003",
@@ -56,29 +59,29 @@ SAMPLE_DOCUMENTS = [
         "format": "Word",
         "client": "Client Alpha",
         "projet": "Projet Alpha",
-        "chemin": "\\\\NAS\\Réunions\\CR_20240115.docx",
+        "chemin": f"{bs}{bs}NAS{bs}Reunions{bs}CR_20240115.docx",
     },
     {
         "reference": "FACT-2024-001",
         "indice": "",
         "nom": "Facture Janvier 2024",
-        "auteur": "Comptabilité",
+        "auteur": "Comptabilite",
         "type": "Facture",
         "format": "PDF",
         "client": "Client Alpha",
         "projet": "Projet Alpha",
-        "chemin": "\\\\NAS\\Comptabilité\\Factures\\FACT_2024_01.pdf",
+        "chemin": f"{bs}{bs}NAS{bs}Comptabilite{bs}Factures{bs}FACT_2024_01.pdf",
     },
     {
         "reference": "PRESENT-2024-001",
         "indice": "V1",
-        "nom": "Présentation Projet Delta",
+        "nom": "Presentation Projet Delta",
         "auteur": "Marie Martin",
-        "type": "Présentation",
+        "type": "Presentation",
         "format": "PowerPoint",
         "client": "Client Delta",
         "projet": "Projet Delta",
-        "chemin": "\\\\NAS\\Présentations\\ProjetDelta.pptx",
+        "chemin": f"{bs}{bs}NAS{bs}Presentations{bs}ProjetDelta.pptx",
     },
     {
         "reference": "DOSSIER-2024-001",
@@ -89,29 +92,29 @@ SAMPLE_DOCUMENTS = [
         "format": "Dossier",
         "client": "Client Echo",
         "projet": "Projet Echo",
-        "chemin": "\\\\NAS\\Projets\\ClientEcho\\Dossier",
+        "chemin": f"{bs}{bs}NAS{bs}Projets{bs}ClientEcho{bs}Dossier",
     },
     {
         "reference": "DOC-2024-004",
         "indice": "C",
-        "nom": "Spécifications Techniques",
+        "nom": "Specifications Techniques",
         "auteur": "Jean Dupont",
         "type": "Document technique",
         "format": "Excel",
         "client": "Client Alpha",
         "projet": "Projet Alpha",
-        "chemin": "\\\\NAS\\Technique\\Specs.xlsx",
+        "chemin": f"{bs}{bs}NAS{bs}Technique{bs}Specs.xlsx",
     },
     {
         "reference": "DOC-2024-005",
         "indice": "",
-        "nom": "Procédure de Test",
+        "nom": "Procedures de Test",
         "auteur": "Marie Martin",
         "type": "Document technique",
         "format": "Word",
         "client": "Client Beta",
         "projet": "Projet Beta",
-        "chemin": "\\\\NAS\\Tests\\Procédure.docx",
+        "chemin": f"{bs}{bs}NAS{bs}Tests{bs}Procedure.docx",
     },
     {
         "reference": "DOC-2024-006",
@@ -122,7 +125,7 @@ SAMPLE_DOCUMENTS = [
         "format": "PDF",
         "client": "",
         "projet": "Projet Interne",
-        "chemin": "\\\\NAS\\Documentation\\Manuel.pdf",
+        "chemin": f"{bs}{bs}NAS{bs}Documentation{bs}Manuel.pdf",
     },
 ]
 
@@ -133,7 +136,7 @@ def init_database():
     
     # Create all tables
     Base.metadata.create_all(bind=engine)
-    print("✓ Tables created")
+    print("Tables created")
     
     # Create a session
     Session = sessionmaker(bind=engine)
@@ -170,13 +173,13 @@ def init_database():
                 session.add(document)
             
             session.commit()
-            print(f"✓ Added {len(SAMPLE_DOCUMENTS)} sample documents")
+            print(f"Added {len(SAMPLE_DOCUMENTS)} sample documents")
         else:
             print(f"Database already contains {count} documents, skipping sample data")
         
         # Print summary
         documents = session.query(Document).all()
-        print(f"\nDatabase Summary:")
+        print(f"Database Summary:")
         print(f"  Total documents: {len(documents)}")
         
         if documents:
@@ -190,11 +193,11 @@ def init_database():
             print(f"  Unique clients: {clients}")
             print(f"  Unique projets: {projets}")
         
-        print("\n✓ Database initialization complete!")
+        print("Database initialization complete!")
         
     except Exception as e:
         session.rollback()
-        print(f"✗ Error initializing database: {e}")
+        print(f"Error initializing database: {e}")
         raise
     finally:
         session.close()
@@ -202,7 +205,9 @@ def init_database():
 
 if __name__ == "__main__":
     # Set database path from environment or use default
-    db_path = os.environ.get("DATABASE_PATH", "database\\beems_ged.db")
+    bs = chr(92)
+    default_db_path = os.path.join("database", "beems_ged.db").replace("/", bs)
+    db_path = os.environ.get("DATABASE_PATH", default_db_path)
     print(f"Using database: {db_path}")
     
     init_database()

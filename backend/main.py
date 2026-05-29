@@ -8,7 +8,10 @@ import os
 
 if __name__ == "__main__":
     # Set default database path if not set
-    db_path = os.environ.get("DATABASE_PATH", "database\\beems_ged.db")
+    # Utiliser chr(92) pour éviter les problèmes avec les backslashes dans les f-strings
+    bs = chr(92)
+    default_db_path = os.path.join("database", "beems_ged.db").replace("/", bs)
+    db_path = os.environ.get("DATABASE_PATH", default_db_path)
     os.environ["DATABASE_PATH"] = db_path
     
     # Start the server

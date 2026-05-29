@@ -1,39 +1,39 @@
 @echo off
 chcp 65001 >nul
-echo Démarrage du backend BeeMS GED...
+echo Demarrage du backend BeeMS GED...
 echo ================================
 
 cd backend
 
-rem Vérifier si Python est installé
+rem Verifier si Python est installe
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo Erreur: Python n'est pas installé ou n'est pas dans le PATH
-    echo Veuillez installer Python 3.10+ et réessayer
+    echo Erreur: Python n'est pas installe ou n'est pas dans le PATH
+    echo Veuillez installer Python 3.10+ et reessayer
     pause
     exit /b 1
 )
 
-rem Créer l'environnement virtuel si inexistant
+rem Creer l'environnement virtuel si inexistant
 if not exist venv (
-    echo Création de l'environnement virtuel...
+    echo Creation de l'environnement virtuel...
     python -m venv venv
 )
 
 rem Activer l'environnement virtuel
 call venv\Scripts\activate
 
-rem Installer les dépendances si nécessaire
+rem Installer les dependances si necessaire
 if not exist venv\Lib\site-packages\fastapi (
-    echo Installation des dépendances...
+    echo Installation des dependances...
     pip install -r requirements.txt
 )
 
-rem Configurer le chemin de la base de données
-set DATABASE_PATH=database\beems_ged.db
+rem Configurer le chemin de la base de donnees (utiliser des forward slashes)
+set DATABASE_PATH=database/beems_ged.db
 
-echo Démarrage du serveur FastAPI...
-echo Accès: http://localhost:8000
-echo Appuyez sur Ctrl+C pour arrêter
+echo Demarrage du serveur FastAPI...
+echo Acces: http://localhost:8000
+echo Appuyez sur Ctrl+C pour arreter
 
 python main.py

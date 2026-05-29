@@ -81,8 +81,13 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     host = os.environ.get("HOST", "0.0.0.0")
     
+    # Utiliser chr(92) pour éviter les problèmes avec les backslashes dans les f-strings
+    bs = chr(92)
+    default_db = r"database" + bs + "beems_ged.db"
+    db_path = os.environ.get("DATABASE_PATH", default_db)
+    
     print(f"Starting BeeMS GED API on {host}:{port}")
-    print(f"Database path: {os.environ.get('DATABASE_PATH', 'database\\beems_ged.db')}")
+    print(f"Database path: {db_path}")
     
     uvicorn.run(
         "app.main:app",
